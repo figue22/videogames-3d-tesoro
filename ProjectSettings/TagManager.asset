@@ -7,6 +7,7 @@ TagManager:
   - CinemachineTarget
   - Key
   - Coin
+  - Trampa
   layers:
   - Default
   - TransparentFX
