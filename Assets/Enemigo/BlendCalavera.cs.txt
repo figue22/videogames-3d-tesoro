@@ -1,0 +1,101 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class BlendCalavera : MonoBehaviour
+{
+    float sangre;
+    NavMeshAgent Agente;
+    public Transform Jugador;
+    Vector3 puntoOrigen;
+    bool blocked;
+    bool bandera;
+    // Start is called before the first frame update
+    void Start()
+    {   
+        this.puntoOrigen=this.transform.position;
+        Agente=this.GetComponent<NavMeshAgent> ();  
+        this.GetComponent<Animator>().SetFloat("Acciones",0.01f);
+        this.sangre=1.0f;
+        bandera=true;
+        this.GetComponent<Animator>().ResetTrigger("muerte");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+      UnityEngine.AI.NavMeshHit hit;
+   		blocked = NavMesh.Raycast (this.transform.position, Jugador.position, out hit,UnityEngine.AI.NavMesh.AllAreas);
+         if(!blocked)//si me esta viendo
+         {
+         if (hit.distance>4 && hit.distance < 10f)//correr
+           {
+         // if(this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Acciones"))
+			      {
+             this.GetComponent<Animator>().SetFloat("Acciones",0.4f);
+             this.Agente.SetDestination(Jugador.position);
+            }
+            
+           }
+         if (hit.distance<=4)//atacar
+           {
+           //this.GetComponent<Animator>().SetFloat("Acciones",0.6f);
+           this.GetComponent<Animator>().SetTrigger("atacar");
+           this.Agente.SetDestination(this.transform.position);
+         
+           }
+        //  if(this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Acciones"))
+			    //    transform.LookAt(Jugador.position, Vector3.up);//para ver el jugador rotacion
+          
+         }
+         else  //si no me esta viendo
+         {
+           float dist = Vector3.Distance(transform.position, this.puntoOrigen);
+    
+           if(dist<2.0f)//llego al punto de origen
+           {
+           this.Agente.SetDestination(this.transform.position);
+           this.GetComponent<Animator>().SetFloat("Acciones",0.01f);
+           }
+           else{  //regreso al punto de origen
+             
+           this.Agente.SetDestination(this.puntoOrigen);
+           this.GetComponent<Animator>().SetFloat("Acciones",0.2f);
+            }
+         }
+         if (!bandera)
+          this.Agente.SetDestination(this.transform.position);
+          
+
+    }
+    public void setGolpe(int animacion)//recibir el golpe
+    {
+     if(animacion==1)
+     {
+      this.GetComponent<Animator>().SetTrigger("golpe");
+      if(this.sangre>0f)
+      this.sangre=this.sangre-0.25f;
+      
+      if(this.sangre<=0f)
+      {
+      print("sangre:  "+this.sangre);
+       if(bandera)
+       {
+        this.GetComponent<Animator>().SetInteger("final",1);
+        this.GetComponent<Animator>().SetTrigger("muerte");
+        bandera=false;
+       } 
+      // this.GetComponent<BlendCalavera>().enabled=!this.GetComponent<BlendCalavera>().enabled;
+      Destroy(this.gameObject,8f);
+      
+      }
+     }
+     if(animacion==2)
+     {
+         
+       this.GetComponent<Animator>().ResetTrigger("golpe");
+     }
+
+    }
+}

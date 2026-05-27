@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 7ded3c2d1b2db4a429ac04c89b53d1f1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - imagenBarraVida: {instanceID: 0}
+  - sonidoQueja: {fileID: 8300000, guid: 6736522356706af4baa8e64c6b4ba993, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
